@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: saleor
+  labels:
+    app: saleor
+    component: dashboard
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saleor
+      component: dashboard
+  template:
+    metadata:
+      labels:
+        app: saleor
+        component: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: ariellahiany/dashboard:latest
+          imagePullPolicy: Always
+          ports:
+            - name: dashboard
+              protocol: TCP
+              containerPort: 9000
+          args: ["npm", "start", "--", "--host", "0.0.0.0"]
