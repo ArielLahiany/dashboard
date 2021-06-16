@@ -3,6 +3,11 @@
     state: present
     src: /home/arik/kubernetes/platform/resources/manifests/namespaces/saleor.yaml
 
+- name: Apply Saleor Dashboard volume manifest to the cluster.
+  community.kubernetes.k8s:
+    state: present
+    src: /home/arik/kubernetes/platform/dashboard/manifests/dashboard/volume.yaml
+
 - name: Apply Saleor Dashboard service manifest to the cluster.
   community.kubernetes.k8s:
     state: present
