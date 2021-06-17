@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashboard
+  namespace: saleor
+data:
+  # Nginx default configuration file
+  default.conf: |
+    server {
+        listen 9000;
+        server_name localhost;
+        root /dashboard/dashboard/;
+
+        location /dashboard/ {
+            alias /dashboard/dashboard/;
+            index index.html;
+            try_files $uri $uri/ /dashboard/index.html;
+        }
+    }

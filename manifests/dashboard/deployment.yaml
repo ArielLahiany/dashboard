@@ -28,7 +28,17 @@ spec:
             - name: dashboard
               protocol: TCP
               containerPort: 9000
-          args: ["npm", "start", "--", "--host", "0.0.0.0"]
+#          args: ["npm", "start", "--", "--host", "0.0.0.0"]
+          volumeMounts:
+            - name: config
+              mountPath: /etc/nginx/conf.d/
+      volumes:
+        - name: config
+          configMap:
+            name: dashboard
+            items:
+              - key: default.conf
+                path: default.conf
 #          volumeMounts:
 #            - name: storage
 #              mountPath: /dashboard
