@@ -2,11 +2,11 @@
 FROM node:latest as builder
 
 # Updates and installs required Linux dependencies.
-RUN set -eux; \
-    apt-get -y update; \
-    apt-get -y upgrade; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
+RUN set -eux \
+    && apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Installs required Node dependencies.
 COPY package*.json /dashboard/
@@ -36,19 +36,17 @@ RUN STATIC_URL=${STATIC_URL} API_URI=${API_URI} APP_MOUNT_URI=${APP_MOUNT_URI} n
 FROM nginx:alpine as release
 
 # Defines new group and user for security reasons.
-RUN addgroup -S saleor && adduser -S -G saleor saleor
-
-# Adds the new user to the Nginx group, for permissions in the server.
-RUN adduser nginx saleor
+RUN addgroup -S saleor \
+    && adduser -S -G saleor saleor
 
 # Updates and installs required Linux dependencies.
-RUN set -eux; \
-    apk update; \
-    apk upgrade; \
-    apk add --no-cache \
+RUN set -eux \
+    && apk update \
+    && apk upgrade \
+    && apk add --no-cache \
         nano \
-    ; \
-  rm -rf /var/cache/apk/*
+    \
+    && rm -rf /var/cache/apk/*
 
 # Copies the build files from the main builder.
 COPY --from=builder --chown=saleor:saleor /dashboard/build/ /dashboard/
@@ -57,13 +55,13 @@ COPY --from=builder --chown=saleor:saleor /dashboard/build/ /dashboard/
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Removes the demand for a specific user from the basic Nginx configuration file.
-RUN sed -i "2,2d;" /etc/nginx/nginx.conf
+RUN sed -i "/user  nginx;/d" /etc/nginx/nginx.conf
 
 # Changes the ownership of the required directories and files.
 RUN chown -R saleor:saleor /etc/nginx/ \
     && chown -R saleor:saleor /var/cache/nginx \
     && chown -R saleor:saleor /var/log/nginx \
-    && chown -R saleor:saleor /var/run/nginx.pid
+    && chown -R saleor:saleor /var/run/
 
 # Expose the deafult port for Salor Dashboard.
 EXPOSE 9000
