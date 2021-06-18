@@ -8,10 +8,11 @@ RUN set -eux \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Installs required Node dependencies.
+# Updates and installs required Node dependencies.
 COPY package*.json /dashboard/
 WORKDIR /dashboard
-RUN npm install
+RUN npm -g install npm@latest \
+    && npm install
 
 # Copies the source code from the host into the container.
 COPY . /dashboard
@@ -32,7 +33,7 @@ ENV API_URI ${API_URI:-http://localhost:8000/graphql/}
 # Executes npm build script.
 RUN STATIC_URL=${STATIC_URL} API_URI=${API_URI} APP_MOUNT_URI=${APP_MOUNT_URI} npm run build
 
-# Sets node:alpine as the release image.
+# Sets nginx:alpine as the release image.
 FROM nginx:alpine as release
 
 # Defines new group and user for security reasons.
@@ -63,8 +64,8 @@ RUN chown -R saleor:saleor /etc/nginx/ \
     && chown -R saleor:saleor /var/log/nginx \
     && chown -R saleor:saleor /var/run/
 
-# Expose the deafult port for Salor Dashboard.
+# Exposes the deafult port for Salor Dashboard.
 EXPOSE 9000
 
-# Change to the new user for security reasons.
+# Changes to the new user for security reasons.
 USER saleor

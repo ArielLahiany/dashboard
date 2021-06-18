@@ -7,8 +7,8 @@ on:
     paths-ignore:
       - "*.md"
       - ".github/workflows/*"
-      - "*/manifests"
-      - "*/playbooks"
+      - "/manifests/*"
+      - "/playbooks/*"
 
 jobs:
   test:
