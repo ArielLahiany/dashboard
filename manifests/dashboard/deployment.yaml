@@ -20,6 +20,10 @@ spec:
         app: saleor
         component: dashboard
     spec:
+      hostAliases:
+        - ip: 10.152.183.80
+          hostnames:
+            - django.saleor
       containers:
         - name: dashboard
           image: ariellahiany/dashboard:latest
