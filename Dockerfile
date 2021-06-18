@@ -28,7 +28,7 @@ ENV STATIC_URL ${STATIC_URL:-/dashboard/}
 
 # Defines URI of a running instance of the Saleor GraphQL API.
 ARG API_URI
-ENV API_URI ${API_URI:-http://django:30080/graphql/}
+ENV API_URI ${API_URI:-http://10.152.183.80:8000/graphql/}
 
 # Executes npm build script.
 RUN STATIC_URL=${STATIC_URL} API_URI=${API_URI} APP_MOUNT_URI=${APP_MOUNT_URI} npm run build
@@ -51,9 +51,6 @@ RUN set -eux \
 
 # Copies the build files from the main builder.
 COPY --from=builder --chown=saleor:saleor /dashboard/build/ /dashboard/
-
-# todo: delete from here, and control with ConfigMap in k8s.
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Removes the demand for a specific user from the basic Nginx configuration file.
 RUN sed -i "/user  nginx;/d" /etc/nginx/nginx.conf
