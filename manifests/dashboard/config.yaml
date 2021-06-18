@@ -4,6 +4,9 @@ metadata:
   name: dashboard
   namespace: saleor
 data:
+  # Defines URI of a running instance of the Saleor GraphQL API.
+  API_URI: http://10.0.0.10:30080/graphql/
+
   # Nginx default configuration file
   default.conf: |
     server {
