@@ -28,12 +28,6 @@ spec:
             - name: dashboard
               protocol: TCP
               containerPort: 9000
-          env:
-            - name: API_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: dashboard
-                  key: API_URI
           volumeMounts:
             - name: config
               mountPath: /etc/nginx/conf.d/
@@ -44,10 +38,3 @@ spec:
             items:
               - key: default.conf
                 path: default.conf
-#          volumeMounts:
-#            - name: storage
-#              mountPath: /dashboard
-#      volumes:
-#        - name: storage
-#          persistentVolumeClaim:
-#            claimName: dashboard
